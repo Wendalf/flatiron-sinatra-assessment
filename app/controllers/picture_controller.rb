@@ -15,14 +15,24 @@ class PictureController < ApplicationController
   end
 
   get '/pictures/:id' do
+    redirect '/login' unless logged_in?
+    begin
     @picture = Picture.find(params[:id])
+    rescue
+      redirect '/notfound'
+    end
     @dimensions = @picture.proportional_crop
     erb :'pictures/show'
   end
 
   get '/pictures/:id/edit' do
-    picture = Picture.find(params[:id])
-    if !logged_in? || picture.user_id != current_user.id
+    redirect '/login' unless logged_in?
+    begin
+      picture = Picture.find(params[:id])
+    rescue
+      redirect '/notfound'
+    end
+    if !logged_in? || picture.user_id != current_user.id 
       redirect "/pictures/#{picture.id}/error"
     else
       @picture = Picture.find(params[:id])

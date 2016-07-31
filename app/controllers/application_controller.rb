@@ -83,5 +83,9 @@ class ApplicationController < Sinatra::Base
       redirect '/signup'
     end
   end
+  error Sinatra::NotFound do
+  content_type 'text/plain'
+  [404, 'Page Not Found']
+end
 
 end
